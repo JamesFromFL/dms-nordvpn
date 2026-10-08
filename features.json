@@ -1,0 +1,499 @@
+{
+  "inspectedDate": "2026-10-07",
+  "client": "NordVPN Version 5.4.0",
+  "dms": "v1.6.0-386-g9ec48c4f1",
+  "discoveredCommands": [
+    "account",
+    "cities",
+    "connect",
+    "countries",
+    "disconnect",
+    "groups",
+    "login",
+    "logout",
+    "rate",
+    "register",
+    "set",
+    "settings",
+    "status",
+    "version",
+    "allowlist",
+    "pause",
+    "diagnostics",
+    "meshnet",
+    "fileshare",
+    "help"
+  ],
+  "discoveredSettings": [
+    "autoconnect",
+    "protection",
+    "defaults",
+    "dns",
+    "firewall",
+    "fwmark",
+    "routing",
+    "analytics",
+    "killswitch",
+    "notify",
+    "tray",
+    "obfuscate",
+    "protocol",
+    "technology",
+    "lan-discovery",
+    "virtual-location",
+    "post-quantum",
+    "arp-ignore",
+    "ech",
+    "meshnet",
+    "help"
+  ],
+  "features": [
+    {
+      "id": "quick-connect",
+      "stage": "scaffold",
+      "commands": [
+        [
+          "connect"
+        ]
+      ],
+      "notes": "Fastest server"
+    },
+    {
+      "id": "country-city",
+      "stage": "scaffold",
+      "commands": [
+        [
+          "connect",
+          "<country>",
+          "<city>"
+        ]
+      ],
+      "notes": "Country/city selection"
+    },
+    {
+      "id": "specialty-groups",
+      "stage": "scaffold",
+      "commands": [
+        [
+          "connect",
+          "--group",
+          "<group>",
+          "<country>"
+        ]
+      ],
+      "notes": "Client-advertised groups"
+    },
+    {
+      "id": "disconnect",
+      "stage": "scaffold",
+      "commands": [
+        [
+          "disconnect"
+        ]
+      ],
+      "notes": "Disconnect without changing Kill Switch"
+    },
+    {
+      "id": "pause",
+      "stage": "scaffold",
+      "commands": [
+        [
+          "pause",
+          "5m"
+        ]
+      ],
+      "notes": "Five-minute pause; duration editor pending"
+    },
+    {
+      "id": "status",
+      "stage": "scaffold",
+      "commands": [
+        [
+          "status"
+        ]
+      ],
+      "notes": "Authoritative live status in a dedicated process lane; initial read precedes metadata/settings, coalesced polling, failed-start recovery, and stale-response guards."
+    },
+    {
+      "id": "catalog",
+      "stage": "scaffold",
+      "commands": [
+        [
+          "countries",
+          "cities",
+          "groups"
+        ]
+      ],
+      "notes": "Live CLI countries/groups and validated persistent city catalogs; 24-hour freshness, seven-day discard, one idle low-priority city preload every two seconds, foreground promotion and retry."
+    },
+    {
+      "id": "technology",
+      "stage": "scaffold",
+      "commands": [
+        [
+          "set",
+          "technology",
+          "<value>"
+        ]
+      ],
+      "notes": "NordLynx/OpenVPN/NordWhisper from CLI help"
+    },
+    {
+      "id": "transport",
+      "stage": "scaffold",
+      "commands": [
+        [
+          "set",
+          "protocol",
+          "UDP|TCP"
+        ]
+      ],
+      "notes": "Shown for OpenVPN"
+    },
+    {
+      "id": "dns",
+      "stage": "scaffold",
+      "commands": [
+        [
+          "set",
+          "dns",
+          "<IPv4 ...>|off"
+        ]
+      ],
+      "notes": "Up to three IPv4 addresses; changes protection"
+    },
+    {
+      "id": "killswitch",
+      "stage": "scaffold",
+      "commands": [
+        [
+          "set",
+          "killswitch",
+          "on|off"
+        ]
+      ],
+      "notes": "Displayed only when advertised and readable from the installed CLI."
+    },
+    {
+      "id": "autoconnect",
+      "stage": "scaffold",
+      "commands": [
+        [
+          "set",
+          "autoconnect",
+          "on|off"
+        ]
+      ],
+      "notes": "Displayed only when advertised and readable from the installed CLI."
+    },
+    {
+      "id": "protection",
+      "stage": "scaffold",
+      "commands": [
+        [
+          "set",
+          "protection",
+          "on|off"
+        ]
+      ],
+      "notes": "Displayed only when advertised and readable from the installed CLI."
+    },
+    {
+      "id": "post-quantum",
+      "stage": "scaffold",
+      "commands": [
+        [
+          "set",
+          "post-quantum",
+          "on|off"
+        ]
+      ],
+      "notes": "Displayed only when advertised and readable from the installed CLI."
+    },
+    {
+      "id": "lan-discovery",
+      "stage": "scaffold",
+      "commands": [
+        [
+          "set",
+          "lan-discovery",
+          "on|off"
+        ]
+      ],
+      "notes": "Displayed only when advertised and readable from the installed CLI."
+    },
+    {
+      "id": "obfuscate",
+      "stage": "scaffold",
+      "commands": [
+        [
+          "set",
+          "obfuscate",
+          "on|off"
+        ]
+      ],
+      "notes": "Displayed only when advertised and readable from the installed CLI."
+    },
+    {
+      "id": "virtual-location",
+      "stage": "scaffold",
+      "commands": [
+        [
+          "set",
+          "virtual-location",
+          "on|off"
+        ]
+      ],
+      "notes": "Displayed only when advertised and readable from the installed CLI."
+    },
+    {
+      "id": "notify",
+      "stage": "scaffold",
+      "commands": [
+        [
+          "set",
+          "notify",
+          "on|off"
+        ]
+      ],
+      "notes": "Displayed only when advertised and readable from the installed CLI."
+    },
+    {
+      "id": "meshnet",
+      "stage": "scaffold",
+      "commands": [
+        [
+          "set",
+          "meshnet",
+          "on|off"
+        ]
+      ],
+      "notes": "Displayed only when advertised and readable from the installed CLI."
+    },
+    {
+      "id": "ech",
+      "stage": "scaffold",
+      "commands": [
+        [
+          "set",
+          "ech",
+          "on|off"
+        ]
+      ],
+      "notes": "Displayed only when advertised and readable from the installed CLI."
+    },
+    {
+      "id": "analytics",
+      "stage": "scaffold",
+      "commands": [
+        [
+          "set",
+          "analytics",
+          "on|off"
+        ]
+      ],
+      "notes": "Displayed only when advertised and readable from the installed CLI."
+    },
+    {
+      "id": "allowlist",
+      "stage": "planned",
+      "commands": [
+        [
+          "allowlist",
+          "add|remove",
+          "port|ports|subnet"
+        ]
+      ],
+      "notes": "Editor and exact subcommand capability discovery pending."
+    },
+    {
+      "id": "autoconnect-target",
+      "stage": "planned",
+      "commands": [
+        [
+          "set",
+          "autoconnect",
+          "on",
+          "<target>"
+        ]
+      ],
+      "notes": "Target selection pending."
+    },
+    {
+      "id": "account-login",
+      "stage": "planned",
+      "commands": [
+        [
+          "account",
+          "login",
+          "logout"
+        ]
+      ],
+      "notes": "Browser login and account UI pending. No credentials stored."
+    },
+    {
+      "id": "meshnet-peers",
+      "stage": "planned",
+      "commands": [
+        [
+          "meshnet"
+        ]
+      ],
+      "notes": "Peer permissions and routing UI pending."
+    },
+    {
+      "id": "fileshare",
+      "stage": "planned",
+      "commands": [
+        [
+          "fileshare"
+        ]
+      ],
+      "notes": "File selection and transfer UI pending."
+    },
+    {
+      "id": "diagnostics",
+      "stage": "planned",
+      "commands": [
+        [
+          "diagnostics"
+        ]
+      ],
+      "notes": "User-triggered diagnostics collector pending."
+    },
+    {
+      "id": "advanced-networking",
+      "stage": "planned",
+      "commands": [
+        [
+          "set",
+          "firewall|routing|fwmark|arp-ignore"
+        ]
+      ],
+      "notes": "Expert networking controls pending."
+    },
+    {
+      "id": "tray",
+      "stage": "planned",
+      "commands": [
+        [
+          "set",
+          "tray",
+          "on|off"
+        ]
+      ],
+      "notes": "Client tray preference pending."
+    },
+    {
+      "id": "defaults",
+      "stage": "planned",
+      "commands": [
+        [
+          "set",
+          "defaults"
+        ]
+      ],
+      "notes": "Reset workflow pending."
+    },
+    {
+      "id": "rating",
+      "stage": "planned",
+      "commands": [
+        [
+          "rate"
+        ]
+      ],
+      "notes": "Connection rating UI pending."
+    },
+    {
+      "id": "windows-app-split-tunneling",
+      "stage": "platform-gap",
+      "commands": [],
+      "notes": "Linux allowlisting is based on ports and subnets, not app selection."
+    },
+    {
+      "id": "server-load-latency",
+      "stage": "unresolved",
+      "commands": [],
+      "notes": "No supported load/latency fields identified in CLI help; additional metadata source requires a scope decision."
+    },
+    {
+      "id": "dms-theme",
+      "stage": "implemented",
+      "commands": [],
+      "notes": "Supported native DCommon cards, buttons, icons, tabs, dropdowns, fields, toggles, list/flickable scroll hosts and scrollbars. Live DMS corner strength/fixed radii, fonts/family/scale/weight, button color mode, bar widget colors, custom card/chip surfaces, transparency, outlines, scrollbar visibility, focus/motion/ripple defaults. Custom map labels follow the same roles with cached font measurements; native GPU rounded content clipping."
+    },
+    {
+      "id": "bar-icon-style",
+      "stage": "implemented",
+      "commands": [],
+      "notes": "Persistent choice of native VPN-lock/connected-shield glyphs or the supplied NordVPN logo, shared by horizontal and vertical bar widgets. Logo is exact white when disconnected; connected icons use a live DMS semantic color role. An alpha-only precompiled Qt shader preserves logo transparency and proportions without inheriting source RGB or luminance."
+    },
+    {
+      "id": "connected-icon-color",
+      "stage": "implemented",
+      "commands": [],
+      "notes": "Native plugin settings select primary, secondary, tertiary, success, info, warning, or widgetIconColor. The saved role remains linked to DMS appearance changes; invalid roles safely fall back to primary."
+    },
+    {
+      "id": "control-center-indicator",
+      "stage": "platform-gap",
+      "commands": [],
+      "notes": "Installed DMS and current official master expose only built-in Control Center indicator groups, filtering unknown IDs. No supported plugin indicator provider exists. The supported alternatives are the existing Control Center tile or an icon-only NordVPN bar widget beside Control Center, with the user disabling the built-in VPN indicator. No host source or global bar configuration is modified."
+    },
+    {
+      "id": "map-navigation",
+      "stage": "implemented",
+      "commands": [],
+      "notes": "Cursor-anchored wheel zoom to 128x, double-click zoom, drag pan, zoom buttons, world reset; dropdown country focus and zoom-only count clusters."
+    },
+    {
+      "id": "map-city-region",
+      "stage": "implemented",
+      "commands": [
+        [
+          "cities",
+          "<country>"
+        ],
+        [
+          "connect",
+          "<country>",
+          "<city>"
+        ]
+      ],
+      "notes": "World country click connects fastest in that country. Zoom progressively reveals cached CLI city targets, clustered by spacing; city click connects there. Official NordVPN coordinates, centered markers, interior country anchors, 1:50m country/U.S. state geometry, collision-aware labels. State selection filters cities; unmapped cities remain in the picker."
+    },
+    {
+      "id": "map-performance",
+      "stage": "implemented",
+      "commands": [],
+      "notes": "Cached Qt Quick Shapes CurveRenderer paths partitioned by country/state in fixed overview/detail tiers; overview fallback during detail preparation; cosmetic borders; keyed persistent marker controls; immediate normalized pan/zoom positions; 60ms scene discovery/cluster/label updates; bounding-box state hit tests and allocation-free cluster eligibility. Native cold startup and navigation verified. Qt 6.11+ required."
+    },
+    {
+      "id": "city-cache",
+      "stage": "implemented",
+      "commands": [
+        [
+          "cities",
+          "<country>"
+        ]
+      ],
+      "notes": "DMS per-plugin state stores only successful public city lists and timestamps. Startup validates schema/resource bounds and prunes absent countries; stale lists remain visible until replaced. Preload prioritizes connected country, favorites, and common destinations; uses best-effort nice +10 and a two-second read timeout."
+    }
+  ],
+  "liveValidation": "Version 0.7.0: 59 portable QML checks passed without warnings or failures. Native Quickshell/OpenGL icon validation passed 61 assertions and transparent pixel checks for exact disconnected white, all seven DMS color roles, live theme changes, 20 px bar sizing, original artwork proportions and alpha. Settled native idle sample recorded zero frame swaps and CPU ticks over two seconds. Actual installed DMS settings helpers and controls passed 36 checks for saves, reopening, role choices, previews, and narrow layouts. Installed version 0.7.0 was verified byte-for-byte, DMS restarted, and its log confirmed nordVpnControl loaded without plugin errors. Backend, city cache, status service, and map geometry are unchanged from version 0.6.0; prior 38 Python tests passed. Control Center indicator-list support requires a DMS host API; supported bar and tile integration remains available.",
+  "backendResponsibilities": [
+    "VPN tunnel",
+    "Firewall and routing",
+    "Kill Switch",
+    "Auto-connect",
+    "Pause timer"
+  ],
+  "runtimeRequirements": {
+    "qt": ">=6.11",
+    "validatedQt": "6.11.2"
+  },
+  "themeInspectedDate": "2026-10-08",
+  "pluginVersion": "0.7.0",
+  "author": "JamesFromFL"
+}

@@ -1,0 +1,2 @@
+module qs.Services
+singleton PluginService 1.0 PluginService.qml

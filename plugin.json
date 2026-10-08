@@ -1,0 +1,25 @@
+{
+  "id": "nordVpnControl",
+  "name": "NordVPN Control",
+  "description": "A modern NordVPN control center for Linux, with an interactive map and native DMS styling.",
+  "version": "0.7.0",
+  "author": "JamesFromFL",
+  "type": "widget",
+  "capabilities": [
+    "dankbar-widget",
+    "control-center"
+  ],
+  "component": "./NordVpnWidget.qml",
+  "settings": "./Settings.qml",
+  "icon": "vpn_lock",
+  "requires_dms": ">=1.6.0",
+  "dependencies": [
+    "nordvpn",
+    "python3"
+  ],
+  "permissions": [
+    "settings_read",
+    "settings_write",
+    "process"
+  ]
+}

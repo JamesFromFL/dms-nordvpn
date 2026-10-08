@@ -1,0 +1,28 @@
+{
+  "nordCatalog": {
+    "url": "https://api.nordvpn.com/v1/servers/countries",
+    "retrievedAt": "2026-10-08T01:25:09.620119+00:00",
+    "sha256": "c37e8a14be05397b1eadafcde1908870e01c2a9f47f46fc96137be7744186faa",
+    "countries": 150,
+    "cities": 225
+  },
+  "naturalEarth": {
+    "repository": "https://github.com/nvkelso/natural-earth-vector",
+    "commit": "ca96624a56bd078437bca8184e78163e5039ad19",
+    "license": "public domain",
+    "files": {
+      "countries": {
+        "local": "countries-50m.geojson",
+        "gitBlob": "9d99f26dc470fcdbd08b062c813005acbdf73ccb"
+      },
+      "land": {
+        "local": "land-50m.geojson",
+        "gitBlob": "c412c52b5286ba727dcb7047ecd6080bcbeb8298"
+      },
+      "states": {
+        "local": "states-50m.geojson",
+        "gitBlob": "1a362ae0bfbe1f2768071e58a2905a5561039703"
+      }
+    }
+  }
+}

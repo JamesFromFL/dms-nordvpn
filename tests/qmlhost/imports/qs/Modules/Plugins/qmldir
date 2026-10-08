@@ -1,0 +1,6 @@
+module qs.Modules.Plugins
+PluginComponent 1.0 PluginComponent.qml
+PopoutComponent 1.0 PopoutComponent.qml
+PluginSettings 1.0 PluginSettings.qml
+ToggleSetting 1.0 ToggleSetting.qml
+SelectionSetting 1.0 SelectionSetting.qml

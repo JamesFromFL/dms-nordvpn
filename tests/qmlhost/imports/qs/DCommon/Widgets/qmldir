@@ -1,0 +1,13 @@
+module qs.DCommon.Widgets
+DCard 1.0 DCard.qml
+DButton 1.0 DButton.qml
+DIconButton 1.0 DIconButton.qml
+DDropdown 1.0 DDropdown.qml
+DTextField 1.0 DTextField.qml
+DTabBar 1.0 DTabBar.qml
+DToggle 1.0 DToggle.qml
+DListView 1.0 DListView.qml
+DFlickable 1.0 DFlickable.qml
+DScrollbar 1.0 DScrollbar.qml
+DIcon 1.0 DIcon.qml
+StyledText 1.0 StyledText.qml
