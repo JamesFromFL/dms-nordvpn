@@ -17,11 +17,14 @@ BOOL_KEYS = {
     "killswitch", "autoconnect", "protection", "notify", "meshnet", "obfuscate",
     "lan-discovery", "virtual-location", "post-quantum", "analytics", "ech",
 }
+TECHNOLOGIES = ("NORDLYNX", "OPENVPN", "NORDWHISPER")
+UNIFIED_PROTOCOLS = ("nordlynx", "openvpn_udp", "openvpn_tcp", "nordwhisper")
+LEGACY_PROTOCOLS = ("UDP", "TCP")
 LABELS = {
     "kill switch": "killswitch", "auto-connect": "autoconnect",
     "real-time protection": "protection", "threat protection lite": "protection",
     "threat protection": "protection", "cybersec": "protection",
-    "notifications": "notify", "lan discovery": "lan-discovery",
+    "notifications": "notify", "notify": "notify", "lan discovery": "lan-discovery",
     "virtual location": "virtual-location", "virtual locations": "virtual-location",
     "post-quantum vpn": "post-quantum", "post-quantum encryption": "post-quantum",
     "post-quantum": "post-quantum", "obfuscate": "obfuscate",
@@ -156,11 +159,13 @@ def action_args(request):
         return ["pause", request["duration"]]
     if name == "set" and set(request) == {"name", "key", "value"}:
         key, value = request["key"], request["value"]
+        if not isinstance(key, str):
+            raise ValueError("Invalid setting identifier.")
         if key in BOOL_KEYS and isinstance(value, bool):
             return ["set", key, "on" if value else "off"]
-        if key == "technology" and value in {"NORDLYNX", "OPENVPN", "NORDWHISPER"}:
+        if key == "technology" and isinstance(value, str) and value in TECHNOLOGIES:
             return ["set", key, value]
-        if key == "protocol" and value in {"UDP", "TCP"}:
+        if key == "protocol" and isinstance(value, str) and value in (*LEGACY_PROTOCOLS, *UNIFIED_PROTOCOLS):
             return ["set", key, value]
         if key == "dns" and isinstance(value, str):
             if value.lower() in {"off", "disabled"}:
@@ -172,17 +177,50 @@ def action_args(request):
     raise ValueError("Unsupported action or value.")
 
 
+def help_commands(text):
+    return re.findall(r"^\s+([a-z][a-z-]*)(?:,\s*\w+)?\s{2,}", clean(text), re.M)
+
+
+def supported_values(text, parameter, allowed):
+    """Read the CLI's explicit enum, never examples or explanatory footnotes."""
+    section = re.search(
+        rf"^\s*Supported values for <{re.escape(parameter)}>:[ \t]*([^\n]*)",
+        clean(text), re.I | re.M,
+    )
+    if not section:
+        return []
+    tokens = {word.lower() for word in re.findall(r"[A-Za-z][A-Za-z0-9_-]*", section[1])}
+    return [value for value in allowed if value.lower() in tokens]
+
+
 def probe():
     help_result = run_cli(["help"])
     if not help_result["ok"]:
         return help_result
-    settings = run_cli(["set", "--help"])
+    commands = help_commands(help_result["text"])
+    settings = run_cli(["set", "--help"]) if "set" in commands else {"ok": False}
     version = run_cli(["--version"])
-    technology = run_cli(["set", "technology", "--help"])
-    commands = re.findall(r"^\s+([a-z][a-z-]*)(?:,\s*\w+)?\s{2,}", help_result["text"], re.M)
-    keys = re.findall(r"^\s+([a-z][a-z-]*)(?:,\s*\w+)?\s{2,}", settings.get("text", ""), re.M)
-    technologies = [name for name in ("NORDLYNX", "OPENVPN", "NORDWHISPER") if name in technology.get("text", "").upper()]
-    return {"ok": True, "version": version.get("text", "Unknown version"), "commands": commands, "settingKeys": keys, "technologies": technologies}
+    keys = help_commands(settings["text"]) if settings["ok"] else []
+    technologies, protocols, protocol_mode = [], [], "unknown"
+    if "technology" in keys:
+        technology = run_cli(["set", "technology", "--help"])
+        if technology["ok"]:
+            technologies = supported_values(technology["text"], "technology", TECHNOLOGIES)
+    if "protocol" in keys:
+        protocol = run_cli(["set", "protocol", "--help"])
+        if protocol["ok"]:
+            unified = supported_values(protocol["text"], "protocol", UNIFIED_PROTOCOLS)
+            legacy = supported_values(protocol["text"], "protocol", LEGACY_PROTOCOLS)
+            # An unfamiliar mixed schema is not enough evidence to choose a UI.
+            if unified and not legacy:
+                protocols, protocol_mode = unified, "unified"
+            elif legacy and not unified:
+                protocols, protocol_mode = legacy, "legacy"
+    return {
+        "ok": True, "version": version.get("text", "Unknown version") if version["ok"] else "Unknown version",
+        "commands": commands, "settingKeys": keys, "technologies": technologies,
+        "protocolMode": protocol_mode, "protocols": protocols,
+    }
 
 
 def snapshot():

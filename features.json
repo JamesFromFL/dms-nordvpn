@@ -1,7 +1,7 @@
 {
-  "inspectedDate": "2026-10-07",
-  "client": "NordVPN Version 5.4.0",
-  "dms": "v1.6.0-386-g9ec48c4f1",
+  "inspectedDate": "2026-11-14",
+  "client": "NordVPN Version 6.0.2",
+  "dms": "Dux Modular Shell v2.2-beta (dms v2.1.0-102-ge09c2b068)",
   "discoveredCommands": [
     "account",
     "cities",
@@ -36,14 +36,10 @@
     "killswitch",
     "notify",
     "tray",
-    "obfuscate",
     "protocol",
-    "technology",
     "lan-discovery",
-    "virtual-location",
     "post-quantum",
     "arp-ignore",
-    "ech",
     "meshnet",
     "help"
   ],
@@ -128,27 +124,37 @@
     },
     {
       "id": "technology",
-      "stage": "scaffold",
+      "stage": "implemented",
       "commands": [
         [
           "set",
           "technology",
           "<value>"
+        ],
+        [
+          "set",
+          "protocol",
+          "<value>"
         ]
       ],
-      "notes": "NordLynx/OpenVPN/NordWhisper from CLI help"
+      "notes": "NordVPN 6 uses advertised unified protocol choices (NordLynx, OpenVPN UDP/TCP, NordWhisper); legacy clients retain separate technology and transport controls. The active CLI help determines the schema and allowed choices; unknown help never invents unified choices. Post-quantum availability recognizes NordLynx in either schema."
     },
     {
       "id": "transport",
-      "stage": "scaffold",
+      "stage": "implemented",
       "commands": [
         [
           "set",
           "protocol",
           "UDP|TCP"
+        ],
+        [
+          "set",
+          "protocol",
+          "nordlynx|openvpn_udp|openvpn_tcp|nordwhisper"
         ]
       ],
-      "notes": "Shown for OpenVPN"
+      "notes": "Legacy UDP/TCP is offered for OpenVPN; unified clients use a single protocol selector. Advertised subsets are respected. Dropdowns retain authoritative snapshot bindings after native selection, including failed actions and external changes."
     },
     {
       "id": "dns",
@@ -248,7 +254,7 @@
     },
     {
       "id": "notify",
-      "stage": "scaffold",
+      "stage": "implemented",
       "commands": [
         [
           "set",
@@ -256,7 +262,7 @@
           "on|off"
         ]
       ],
-      "notes": "Displayed only when advertised and readable from the installed CLI."
+      "notes": "Native notification toggle when advertised and readable; both Notify (NordVPN 6) and Notifications (legacy) labels map to the same typed boolean setting."
     },
     {
       "id": "meshnet",
@@ -481,7 +487,7 @@
       "notes": "DMS per-plugin state stores only successful public city lists and timestamps. Startup validates schema/resource bounds and prunes absent countries; stale lists remain visible until replaced. Preload prioritizes connected country, favorites, and common destinations; uses best-effort nice +10 and a two-second read timeout."
     }
   ],
-  "liveValidation": "Version 0.7.0: 59 portable QML checks passed without warnings or failures. Native Quickshell/OpenGL icon validation passed 61 assertions and transparent pixel checks for exact disconnected white, all seven DMS color roles, live theme changes, 20 px bar sizing, original artwork proportions and alpha. Settled native idle sample recorded zero frame swaps and CPU ticks over two seconds. Actual installed DMS settings helpers and controls passed 36 checks for saves, reopening, role choices, previews, and narrow layouts. Installed version 0.7.0 was verified byte-for-byte, DMS restarted, and its log confirmed nordVpnControl loaded without plugin errors. Backend, city cache, status service, and map geometry are unchanged from version 0.6.0; prior 38 Python tests passed. Control Center indicator-list support requires a DMS host API; supported bar and tile integration remains available.",
+  "liveValidation": "Version 0.7.1: 70 portable QML checks passed without warnings or failures, including unified and legacy protocol selection, Notify, authoritative snapshot readback, and post-quantum availability. All 52 Python backend/map-data tests passed. Focused native DCommon interaction probes passed 30 assertions each against official stable Dux Modular Shell v2.1.2 controls and installed v2.2-beta controls on Quickshell 0.3.2 / Qt 6.12.0 / Wayland/OpenGL. Probes use actual DDropdown selection and DToggle click handlers with inert transport, in-memory storage, and side-effect-free theme inputs. Read-only live NordVPN 6.0.2 validation discovered all four unified protocols and parsed Notify plus connection status successfully. No live VPN setting changes or connection actions were performed. The v0.7.0 shell API/theme/map compatibility audit remains recorded separately; this update preserves plugin identifiers, legacy CLI support, city-cache paths, map geometry and theme roles.",
   "backendResponsibilities": [
     "VPN tunnel",
     "Firewall and routing",
@@ -491,9 +497,26 @@
   ],
   "runtimeRequirements": {
     "qt": ">=6.11",
-    "validatedQt": "6.11.2"
+    "validatedQt": "6.12.0"
   },
-  "themeInspectedDate": "2026-10-08",
-  "pluginVersion": "0.7.0",
-  "author": "JamesFromFL"
+  "themeInspectedDate": "2026-11-14",
+  "pluginVersion": "0.7.1",
+  "author": "JamesFromFL",
+  "compatibility": {
+    "checkedDate": "2026-11-14",
+    "latestStable": "Dux Modular Shell v2.1.2",
+    "installedSource": "v2.2-beta",
+    "quickshell": "0.3.2",
+    "qt": "6.12.0",
+    "nordvpn": "NordVPN Version 6.0.2",
+    "legacyCli": "NordVPN 5 supported-values help verified against official 5.4.1 source; legacy technology/transport commands preserved.",
+    "protocolMode": "unified",
+    "protocols": [
+      "nordlynx",
+      "openvpn_udp",
+      "openvpn_tcp",
+      "nordwhisper"
+    ],
+    "configurationDirectory": "$XDG_CONFIG_HOME/dms (normally ~/.config/dms)"
+  }
 }

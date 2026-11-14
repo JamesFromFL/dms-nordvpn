@@ -24,7 +24,7 @@ PluginSettings {
         objectName: "connectedColorSetting"
         settingKey: "connectedColor"
         label: "Connected icon color"
-        description: "Choose a DMS theme color for the connected icon."
+        description: "Choose a Dux theme color for the connected icon."
         defaultValue: "primary"
         options: [
             { label: "Primary", value: "primary" },

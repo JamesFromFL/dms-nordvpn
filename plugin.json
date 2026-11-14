@@ -1,8 +1,8 @@
 {
   "id": "nordVpnControl",
   "name": "NordVPN Control",
-  "description": "A modern NordVPN control center for Linux, with an interactive map and native DMS styling.",
-  "version": "0.7.0",
+  "description": "A modern NordVPN control center for Linux, with an interactive map and native Dux styling.",
+  "version": "0.7.1",
   "author": "JamesFromFL",
   "type": "widget",
   "capabilities": [

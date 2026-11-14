@@ -25,11 +25,27 @@ Item {
     readonly property var currentCities: vpn.cityCatalogs[country] || []
     readonly property var regionOptions: Geo.regions(country, currentCities)
     readonly property var filteredCities: region ? Geo.regionCities(country, region, currentCities) : currentCities
+    readonly property bool unifiedProtocol: vpn.capabilities.protocolMode === "unified"
+    readonly property var protocolChoices: Array.isArray(vpn.capabilities.protocols) ? vpn.capabilities.protocols : ["UDP", "TCP"]
+    readonly property var unifiedProtocolChoices: unifiedProtocol ? protocolChoices.filter(value => ["nordlynx", "openvpn_udp", "openvpn_tcp", "nordwhisper"].indexOf(value) >= 0) : []
+    readonly property var legacyTransportChoices: protocolChoices.filter(value => value === "UDP" || value === "TCP")
+    readonly property var technologyChoices: vpn.capabilities.technologies || ["NORDLYNX", "OPENVPN", "NORDWHISPER"]
+    readonly property bool nordLynxSelected: unifiedProtocol ? protocolKey(vpn.settings.protocol) === "nordlynx" : (vpn.settings.technology || "").toUpperCase() === "NORDLYNX"
     readonly property string destination: country ? country.replace(/_/g, " ") + (city ? " · " + city.replace(/_/g, " ") : region ? " · " + region : " · Fastest server") : "Fastest available server"
     property alias mapView: worldMap
     property alias tabIndex: tabs.currentIndex
     clip: true
 
+    function protocolKey(value) {
+        return String(value || "").trim().toLowerCase().replace(/[\s()-]+/g, "_").replace(/_+$/, "");
+    }
+    function protocolLabel(value) {
+        return ({nordlynx:"NordLynx", openvpn_udp:"OpenVPN (UDP)", openvpn_tcp:"OpenVPN (TCP)", nordwhisper:"NordWhisper"})[protocolKey(value)] || String(value || "");
+    }
+    function selectProtocol(label) {
+        const value = unifiedProtocolChoices.find(choice => protocolLabel(choice) === label);
+        if (value && value !== protocolKey(vpn.settings.protocol)) vpn.setOption("protocol", value);
+    }
     function loadFavorites() { favorites = store.loadPluginData("nordVpnControl", "favorites", []); }
     function toggleFavorite(value) {
         favorites = favorites.indexOf(value) >= 0 ? favorites.filter(x => x !== value) : favorites.concat([value]);
@@ -105,7 +121,7 @@ Item {
                     D.StyledText {
                         objectName: "statusDetails"
                         Layout.fillWidth: true; elide: Text.ElideRight; font.pixelSize: Theme.fontSizeSmall
-                        text: root.vpn.connected ? [root.vpn.status.country, root.vpn.status.city, root.vpn.status.technology].filter(Boolean).join(" · ") : root.vpn.settings.killswitch === true ? "Kill Switch is on · Disconnected traffic may be blocked" : "Choose a location or use the fastest server"
+                        text: root.vpn.connected ? [root.vpn.status.country, root.vpn.status.city, root.vpn.status.technology || root.protocolLabel(root.vpn.status.protocol)].filter(Boolean).join(" · ") : root.vpn.settings.killswitch === true ? "Kill Switch is on · Disconnected traffic may be blocked" : "Choose a location or use the fastest server"
                         color: statusCard.mutedColor
                     }
                 }
@@ -155,7 +171,7 @@ Item {
                         onValueChanged: value => root.selectCity(value === "Any city" ? "" : root.filteredCities.find(c => c.replace(/_/g, " ") === value))
                     }
                 }
-                WorldMap {
+                Nord.WorldMap {
                     id: worldMap
                     Layout.fillWidth: true; Layout.fillHeight: true; Layout.minimumHeight: 110
                     availableCountries: root.vpn.countries
@@ -262,22 +278,58 @@ Item {
                     D.StyledText { font.pixelSize: Theme.fontSizeMedium; text: root.vpn.settingsError || (root.vpn.ready ? "Connection and privacy" : "Settings load when NordVPN is available."); color: Theme.surfaceVariantText; Layout.fillWidth: true; wrapMode: Text.WordWrap }
                     D.DCard {
                         id: connectionCard
-                        visible: root.vpn.hasSetting("technology")
+                        objectName: "connectionCard"
+                        visible: root.unifiedProtocol ? root.vpn.hasSetting("protocol") && root.unifiedProtocolChoices.length > 0 : root.vpn.hasSetting("technology")
                         Layout.fillWidth: true
                         Layout.preferredHeight: connectionOptions.implicitHeight + pad * 2
                         ColumnLayout {
                             id: connectionOptions
                             anchors.fill: parent; spacing: Theme.spacingS
                             RowLayout {
+                                visible: root.unifiedProtocol
                                 Layout.fillWidth: true
-                                D.StyledText { font.pixelSize: Theme.fontSizeMedium; text: "VPN technology"; color: connectionCard.contentColor; Layout.fillWidth: true }
-                                D.DDropdown { options: root.vpn.capabilities.technologies || ["NORDLYNX", "OPENVPN", "NORDWHISPER"]; currentValue: (root.vpn.settings.technology || "").toUpperCase(); enabled: !root.vpn.busy; onValueChanged: value => root.vpn.setOption("technology", value) }
+                                D.StyledText { text: "VPN protocol"; color: connectionCard.contentColor; font.pixelSize: Theme.fontSizeMedium; Layout.fillWidth: true }
+                                D.DDropdown {
+                                    id: protocolSelector
+                                    objectName: "protocolSelector"
+                                    options: root.unifiedProtocolChoices.map(value => root.protocolLabel(value))
+                                    currentValue: root.protocolLabel(root.vpn.settings.protocol)
+                                    enabled: !root.vpn.busy && options.length > 0
+                                    onValueChanged: value => {
+                                        root.selectProtocol(value);
+                                        currentValue = Qt.binding(() => root.protocolLabel(root.vpn.settings.protocol));
+                                    }
+                                }
                             }
                             RowLayout {
-                                visible: root.vpn.hasSetting("protocol") && (root.vpn.settings.technology || "").toUpperCase() === "OPENVPN"
+                                visible: !root.unifiedProtocol
+                                Layout.fillWidth: true
+                                D.StyledText { font.pixelSize: Theme.fontSizeMedium; text: "VPN technology"; color: connectionCard.contentColor; Layout.fillWidth: true }
+                                D.DDropdown {
+                                    objectName: "technologySelector"
+                                    options: root.technologyChoices
+                                    currentValue: (root.vpn.settings.technology || "").toUpperCase()
+                                    enabled: !root.vpn.busy && options.length > 0
+                                    onValueChanged: value => {
+                                        if (options.indexOf(value) >= 0 && value !== (root.vpn.settings.technology || "").toUpperCase()) root.vpn.setOption("technology", value);
+                                        currentValue = Qt.binding(() => (root.vpn.settings.technology || "").toUpperCase());
+                                    }
+                                }
+                            }
+                            RowLayout {
+                                visible: !root.unifiedProtocol && root.vpn.hasSetting("protocol") && (root.vpn.settings.technology || "").toUpperCase() === "OPENVPN" && root.legacyTransportChoices.length > 0
                                 Layout.fillWidth: true
                                 D.StyledText { font.pixelSize: Theme.fontSizeMedium; text: "OpenVPN transport"; color: connectionCard.contentColor; Layout.fillWidth: true }
-                                D.DDropdown { options: ["UDP", "TCP"]; currentValue: (root.vpn.settings.protocol || "").toUpperCase(); enabled: !root.vpn.busy; onValueChanged: value => root.vpn.setOption("protocol", value) }
+                                D.DDropdown {
+                                    objectName: "transportSelector"
+                                    options: root.legacyTransportChoices
+                                    currentValue: (root.vpn.settings.protocol || "").toUpperCase()
+                                    enabled: !root.vpn.busy
+                                    onValueChanged: value => {
+                                        if (options.indexOf(value) >= 0 && value !== (root.vpn.settings.protocol || "").toUpperCase()) root.vpn.setOption("protocol", value);
+                                        currentValue = Qt.binding(() => (root.vpn.settings.protocol || "").toUpperCase());
+                                    }
+                                }
                             }
                         }
                     }
@@ -310,8 +362,9 @@ Item {
                                     D.StyledText { text: preferenceCard.modelData.detail; color: preferenceCard.mutedColor; font.pixelSize: Theme.fontSizeSmall; Layout.fillWidth: true; wrapMode: Text.WordWrap }
                                 }
                                 D.DToggle {
+                                    objectName: "settingToggle_" + preferenceCard.modelData.key
                                     checked: root.vpn.settings[preferenceCard.modelData.key] === true
-                                    enabled: !root.vpn.busy && (preferenceCard.modelData.key !== "post-quantum" || checked || ((root.vpn.settings.technology || "").toUpperCase() === "NORDLYNX" && root.vpn.settings.meshnet !== true))
+                                    enabled: !root.vpn.busy && (preferenceCard.modelData.key !== "post-quantum" || checked || (root.nordLynxSelected && root.vpn.settings.meshnet !== true))
                                     toggling: root.vpn.busy
                                     Accessible.name: preferenceCard.modelData.label
                                     onToggled: checked => root.vpn.setOption(preferenceCard.modelData.key, checked)
